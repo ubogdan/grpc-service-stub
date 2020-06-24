@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package greeter;
+
+option go_package = "github.com/trusch/grpc-server-stub/pkg/protobuf/greeter";
+
+message GreetRequest {
+	string name = 1;
+}
+
+message GreetResponse {
+	string greeting = 1;
+}
+
+service Greeter {
+	rpc Greet(GreetRequest) returns (GreetResponse);
+}
