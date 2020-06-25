@@ -4,6 +4,9 @@ BUILD_IMAGE=containers.trusch.io/examples/greeter-builder:latest
 BASE_BUILD_IMAGE=golang:1.14
 BINARIES=bin/greeter
 
+COMMIT=$(shell git log --format="%H" -n 1)
+VERSION=$(shell git describe)
+
 default: image
 
 # rebuild and run the server
@@ -28,7 +31,7 @@ bin/%: $(shell find ./ -name "*.go") .buildimage
 		-w /app \
 		-v go-build-cache:/root/.cache/go-build \
 		-v go-mod-cache:/go/pkg/mod $(BUILD_IMAGE) \
-			go build -o $@ -ldflags "-X main.GitCommit=$GIT_COMMIT"  cmd/$(shell basename $@)/main.go
+			go build -o $@ -ldflags "-X github.com/trusch/grpc-service-stub/cmd/greeter/cmd.Version=$(VERSION) -X github.com/trusch/grpc-service-stub/cmd/greeter/cmd.Commit=$(COMMIT)"  cmd/$(shell basename $@)/main.go
 
 # compile protobuf files
 pkg/protobuf/%.pb.go: pkg/protobuf/%.proto .buildimage
